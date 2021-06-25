@@ -405,8 +405,6 @@ EOF
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
-/etc/init.d/pure-ftpd start >/dev/null 2>&1
-pkill pure-ftpd
 /etc/init.d/pure-ftpd start
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
