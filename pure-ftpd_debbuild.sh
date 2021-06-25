@@ -28,7 +28,7 @@ _install_pureftpd_depends(){
         local apt_depends=(libssl-dev zlib1g-dev)
         for depend in ${apt_depends[@]}
         do
-            InstallPack "apt -y install ${depend}"
+            InstallPack "apt-get -y install ${depend}"
         done
     fi
     id -u www >/dev/null 2>&1
