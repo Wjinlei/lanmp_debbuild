@@ -728,6 +728,31 @@ _build_deb(){
     buildroot=/tmp/buildroot
     mkdir -p ${buildroot}
     mkdir -p ${buildroot}/DEBIAN
+    mkdir -p ${buildroot}/usr/local/lib
+
+    cd ${buildroot}/usr/local/lib
+    # Fix libtidy
+    cp -a /usr/lib/libtidys.a ${buildroot}/usr/local/lib
+    cp -a /usr/lib/libtidy.so.5 ${buildroot}/usr/local/lib
+    cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}/usr/local/lib
+    cp -a /usr/lib/libtidy.so ${buildroot}/usr/local/lib
+    # Fix libreadline
+    ln -s libreadline.so.7 libreadline.so
+    cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}/usr/local/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}/usr/local/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}/usr/local/lib
+    # Fix libvpx
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}/usr/local/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}/usr/local/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0 ${buildroot}/usr/local/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}/usr/local/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}/usr/local/lib
+    # Fix libtinfo
+    ln -s libtinfo.so.5 libtinfo.so
+    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}/usr/local/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}/usr/local/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}/usr/local/lib
+    # Copy files
     cp -a --parents ${php56_location} ${buildroot}
     cp -a --parents /etc/init.d/php56 ${buildroot}
 
@@ -750,19 +775,23 @@ Homepage: https://www.hws.com
 EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
-id -u www >/dev/null 2>&1
-[ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+ldconfig -v > /dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: ldconfig"
 update-rc.d -f php56 defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f php56 defaults"
 /etc/init.d/php56 start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/php56 stop > /dev/null 2>&1
 update-rc.d -f php56 remove >/dev/null 2>&1
-/etc/init.d/php56 stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
+    cd /tmp
     dpkg-deb -b ${buildroot} php-5.6.40-linux-amd64.deb
 }
 
