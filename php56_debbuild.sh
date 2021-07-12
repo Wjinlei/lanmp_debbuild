@@ -728,33 +728,34 @@ _build_deb(){
     buildroot=/tmp/buildroot
     mkdir -p ${buildroot}
     mkdir -p ${buildroot}/DEBIAN
-    mkdir -p ${buildroot}/usr/local/lib
-
-    cd ${buildroot}/usr/local/lib
-    # Fix libtidy
-    cp -a /usr/lib/libtidys.a ${buildroot}/usr/local/lib
-    cp -a /usr/lib/libtidy.so.5 ${buildroot}/usr/local/lib
-    cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}/usr/local/lib
-    cp -a /usr/lib/libtidy.so ${buildroot}/usr/local/lib
-    # Fix libreadline
-    ln -s libreadline.so.7 libreadline.so
-    cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}/usr/local/lib
-    cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}/usr/local/lib
-    cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}/usr/local/lib
-    # Fix libvpx
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}/usr/local/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}/usr/local/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0 ${buildroot}/usr/local/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}/usr/local/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}/usr/local/lib
-    # Fix libtinfo
-    ln -s libtinfo.so.5 libtinfo.so
-    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}/usr/local/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}/usr/local/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}/usr/local/lib
     # Copy files
     cp -a --parents ${php56_location} ${buildroot}
     cp -a --parents /etc/init.d/php56 ${buildroot}
+    mkdir -p ${buildroot}/etc/ld.so.conf.d
+    mkdir -p ${buildroot}${php56_location}/lib
+    cd ${buildroot}${php56_location}/lib
+    # Fix libtidy
+    cp -a /usr/lib/libtidys.a ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/libtidy.so.5 ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/libtidy.so ${buildroot}${php56_location}/lib
+    # Fix libreadline
+    ln -s libreadline.so.7 libreadline.so ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}${php56_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}${php56_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}${php56_location}/lib
+    # Fix libvpx
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0 ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php56_location}/lib
+    # Fix libtinfo
+    ln -s libtinfo.so.5 libtinfo.so ${buildroot}${php56_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php56_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php56_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php56_location}/lib
+    echo "${php56_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php56.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
 Package: php56
@@ -790,6 +791,12 @@ update-rc.d -f php56 remove >/dev/null 2>&1
 exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
+
+    cat > ${buildroot}/DEBIAN/postrm << 'EOF'
+ldconfig -v > /dev/null 2>&1
+exit 0
+EOF
+    chmod +x ${buildroot}/DEBIAN/postrm
 
     cd /tmp
     dpkg-deb -b ${buildroot} php-5.6.40-linux-amd64.deb
