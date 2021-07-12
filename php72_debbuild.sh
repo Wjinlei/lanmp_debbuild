@@ -706,8 +706,34 @@ _build_deb(){
     buildroot=/tmp/buildroot
     mkdir -p ${buildroot}
     mkdir -p ${buildroot}/DEBIAN
+    # Copy files
     cp -a --parents ${php72_location} ${buildroot}
     cp -a --parents /etc/init.d/php72 ${buildroot}
+    mkdir -p ${buildroot}/etc/ld.so.conf.d
+    mkdir -p ${buildroot}${php72_location}/lib
+    cd ${buildroot}${php72_location}/lib
+    # Fix libtidy
+    cp -a /usr/lib/libtidys.a ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/libtidy.so.5 ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/libtidy.so ${buildroot}${php72_location}/lib
+    # Fix libreadline
+    ln -s libreadline.so.7 libreadline.so ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}${php72_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}${php72_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}${php72_location}/lib
+    # Fix libvpx
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0 ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php72_location}/lib
+    # Fix libtinfo
+    ln -s libtinfo.so.5 libtinfo.so ${buildroot}${php72_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php72_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php72_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php72_location}/lib
+    echo "${php72_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php72.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
 Package: php72
@@ -728,19 +754,29 @@ Homepage: https://www.hws.com
 EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
-id -u www >/dev/null 2>&1
-[ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+ldconfig -v > /dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: ldconfig"
 update-rc.d -f php72 defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f php72 defaults"
 /etc/init.d/php72 start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/php72 stop > /dev/null 2>&1
 update-rc.d -f php72 remove >/dev/null 2>&1
-/etc/init.d/php72 stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
+    cat > ${buildroot}/DEBIAN/postrm << 'EOF'
+ldconfig -v > /dev/null 2>&1
+exit 0
+EOF
+    chmod +x ${buildroot}/DEBIAN/postrm
+
+    cd /tmp
     dpkg-deb -b ${buildroot} php-7.2.27-linux-amd64.deb
 }
 
