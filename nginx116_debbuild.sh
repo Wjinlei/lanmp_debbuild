@@ -404,13 +404,16 @@ EOF
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f nginx defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f nginx defaults"
 /etc/init.d/nginx start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/nginx stop > /dev/null 2>&1
 update-rc.d -f nginx remove >/dev/null 2>&1
-/etc/init.d/nginx stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 

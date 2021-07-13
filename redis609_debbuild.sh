@@ -246,15 +246,17 @@ Homepage: https://www.hws.com
 EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
-id -u www >/dev/null 2>&1
 update-rc.d -f redis defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f redis defaults"
 /etc/init.d/redis start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/redis stop > /dev/null 2>&1
 update-rc.d -f redis remove >/dev/null 2>&1
-/etc/init.d/redis stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 

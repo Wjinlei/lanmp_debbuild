@@ -405,13 +405,16 @@ EOF
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f pure-ftpd defaults"
 /etc/init.d/pure-ftpd start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/pure-ftpd stop > /dev/null 2>&1
 update-rc.d -f pure-ftpd remove >/dev/null 2>&1
-/etc/init.d/pure-ftpd stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
