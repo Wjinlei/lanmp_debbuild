@@ -717,10 +717,10 @@ _build_deb(){
     cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}${php73_location}/lib
     cp -a /usr/lib/libtidy.so ${buildroot}${php73_location}/lib
     # Fix libreadline
-    ln -s libreadline.so.7 libreadline.so ${buildroot}${php73_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}${php73_location}/lib
     cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}${php73_location}/lib
     cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}${php73_location}/lib
+    ln -s libreadline.so.7 libreadline.so
     # Fix libvpx
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}${php73_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}${php73_location}/lib
@@ -728,10 +728,15 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}${php73_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php73_location}/lib
     # Fix libtinfo
-    ln -s libtinfo.so.5 libtinfo.so ${buildroot}${php73_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php73_location}/lib
     cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php73_location}/lib
     cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php73_location}/lib
+    ln -s libtinfo.so.5 libtinfo.so
+    # Fix libzip
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php73_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.so.4.0.0 ${buildroot}${php73_location}/lib
+    ln -s libzip.so.4.0.0 libzip.so.4
+    ln -s libzip.so.4 libzip.so
     echo "${php73_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php73.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
