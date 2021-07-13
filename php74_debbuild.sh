@@ -731,10 +731,14 @@ _build_deb(){
     cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php74_location}/lib
     ln -s libtinfo.so.5 libtinfo.so
     # Fix libzip
-    cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php73_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libzip.so.4.0.0 ${buildroot}${php73_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php74_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.so.4.0.0 ${buildroot}${php74_location}/lib
     ln -s libzip.so.4.0.0 libzip.so.4
     ln -s libzip.so.4 libzip.so
+    # Fix libonig
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so ${buildroot}${php74_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so.4 ${buildroot}${php74_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so.4.0.0 ${buildroot}${php74_location}/lib
     echo "${php74_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php74.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF

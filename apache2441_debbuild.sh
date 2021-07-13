@@ -593,13 +593,16 @@ EOF
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f httpd defaults >/dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f httpd defaults"
 /etc/init.d/httpd start
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
 
     cat > ${buildroot}/DEBIAN/prerm << 'EOF'
+/etc/init.d/httpd stop > /dev/null 2>&1
 update-rc.d -f httpd remove >/dev/null 2>&1
-/etc/init.d/httpd stop
+exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
