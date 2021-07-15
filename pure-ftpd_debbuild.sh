@@ -19,22 +19,87 @@ include(){
 _install_pureftpd_depends(){
     _info "Starting to install dependencies packages for Pureftpd..."
     if [ "${PM}" = "yum" ];then
-        local yum_depends=(openssl-devel zlib-devel)
+        local yum_depends=(zlib-devel)
         for depend in ${yum_depends[@]}
         do
             InstallPack "yum -y install ${depend}"
         done
     elif [ "${PM}" = "apt-get" ];then
-        local apt_depends=(libssl-dev zlib1g-dev)
+        local apt_depends=(zlib1g-dev)
         for depend in ${apt_depends[@]}
         do
             InstallPack "apt-get -y install ${depend}"
         done
     fi
+    CheckInstalled "_install_openssl102" ${openssl102_location}
     id -u www >/dev/null 2>&1
     [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
     mkdir -p ${pureftpd_location}
     _success "Install dependencies packages for Pureftpd completed..."
+}
+
+_install_openssl102(){
+    cd /tmp
+    _info "${openssl102_filename} install start..."
+    rm -fr ${openssl102_filename}
+    DownloadFile "${openssl102_filename}.tar.gz" "${openssl102_download_url}"
+    tar zxf ${openssl102_filename}.tar.gz
+    cd ${openssl102_filename}
+    CheckError "./config --prefix=${openssl102_location} --openssldir=${openssl102_location} -fPIC shared zlib"
+    CheckError "parallel_make"
+    CheckError "make install"
+
+    #Debian8
+    if Is64bit; then
+        if [ -f /usr/lib/x86_64-linux-gnu/libssl.a ]; then
+            ln -sf ${openssl102_location}/lib/libssl.a /usr/lib/x86_64-linux-gnu
+        fi
+        if [ -f /usr/lib/x86_64-linux-gnu/libssl.so ]; then
+            ln -sf ${openssl102_location}/lib/libssl.so /usr/lib/x86_64-linux-gnu
+        fi
+        if [ -f /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ]; then
+            ln -sf ${openssl102_location}/lib/libssl.so.1.0.0 /usr/lib/x86_64-linux-gnu
+        fi
+        if [ -f /usr/lib/x86_64-linux-gnu/libcrypto.a ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.a /usr/lib/x86_64-linux-gnu
+        fi
+        if [ -f /usr/lib/x86_64-linux-gnu/libcrypto.so ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.so /usr/lib/x86_64-linux-gnu
+        fi
+        if [ -f /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.so.1.0.0 /usr/lib/x86_64-linux-gnu
+        fi
+    else
+        if [ -f /usr/lib/i386-linux-gnu/libssl.a ]; then
+            ln -sf ${openssl102_location}/lib/libssl.a /usr/lib/i386-linux-gnu
+        fi
+        if [ -f /usr/lib/i386-linux-gnu/libssl.so ]; then
+            ln -sf ${openssl102_location}/lib/libssl.so /usr/lib/i386-linux-gnu
+        fi
+        if [ -f /usr/lib/i386-linux-gnu/libssl.so.1.0.0 ]; then
+            ln -sf ${openssl102_location}/lib/libssl.so.1.0.0 /usr/lib/i386-linux-gnu
+        fi
+        if [ -f /usr/lib/i386-linux-gnu/libcrypto.a ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.a /usr/lib/i386-linux-gnu
+        fi
+        if [ -f /usr/lib/i386-linux-gnu/libcrypto.so ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.so /usr/lib/i386-linux-gnu
+        fi
+        if [ -f /usr/lib/i386-linux-gnu/libcrypto.so.1.0.0 ]; then
+            ln -sf ${openssl102_location}/lib/libcrypto.so.1.0.0 /usr/lib/i386-linux-gnu
+        fi
+    fi
+
+    AddToEnv "${openssl102_location}"
+    CreateLib64Dir "${openssl102_location}"
+    if ! grep -qE "^${openssl102_location}/lib" /etc/ld.so.conf.d/*.conf; then
+        echo "${openssl102_location}/lib" > /etc/ld.so.conf.d/openssl102.conf
+    fi
+    ldconfig
+
+    _success "${openssl102_filename} install completed..."
+    rm -f /tmp/${openssl102_filename}.tar.gz
+    rm -fr /tmp/${openssl102_filename}
 }
 
 _create_sysv_script(){
@@ -388,18 +453,6 @@ _build_deb(){
     cp -a --parents ${pureftpd_location} ${buildroot}
     cp -a --parents /etc/ssl/private/pure-ftpd.pem ${buildroot}
     cp -a --parents /etc/init.d/pure-ftpd ${buildroot}
-    mkdir -p ${buildroot}/etc/ld.so.conf.d
-    mkdir -p ${buildroot}${pureftpd_location}/lib
-    cd ${buildroot}${pureftpd_location}/lib
-    # Fix libcrypto
-    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.a ${buildroot}${pureftpd_location}/lib
-    # Fix libssl
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.so ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.a ${buildroot}${pureftpd_location}/lib
-    echo "${pureftpd_location}/lib" > ${buildroot}/etc/ld.so.conf.d/pure-ftpd.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
 Package: pure-ftpd
@@ -415,8 +468,6 @@ Homepage: https://www.hws.com
 EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
-ldconfig -v > /dev/null 2>&1
-[ $? -ne 0 ] && echo "[ERROR]: ldconfig"
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
@@ -434,13 +485,6 @@ exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
-    cat > ${buildroot}/DEBIAN/postrm << 'EOF'
-ldconfig -v > /dev/null 2>&1
-exit 0
-EOF
-    chmod +x ${buildroot}/DEBIAN/postrm
-
-    cd /tmp
     dpkg-deb -b ${buildroot} pureftpd-1.0.49-linux-amd64.deb
 }
 
