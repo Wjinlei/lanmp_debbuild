@@ -422,7 +422,7 @@ id -u www >/dev/null 2>&1
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f pure-ftpd defaults"
 /etc/init.d/pure-ftpd start
-sleep 1s
+sleep 5s
 exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/postinst
