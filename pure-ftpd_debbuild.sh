@@ -391,14 +391,14 @@ _build_deb(){
     mkdir -p ${buildroot}/etc/ld.so.conf.d
     mkdir -p ${buildroot}${pureftpd_location}/lib
     cd ${buildroot}${pureftpd_location}/lib
-    # Fix libssl
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.so ${buildroot}${pureftpd_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libssl.a ${buildroot}${pureftpd_location}/lib
     # Fix libcrypto
     cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ${buildroot}${pureftpd_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so ${buildroot}${pureftpd_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libcrypto.a ${buildroot}${pureftpd_location}/lib
+    # Fix libssl
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.so ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.a ${buildroot}${pureftpd_location}/lib
     echo "${pureftpd_location}/lib" > ${buildroot}/etc/ld.so.conf.d/pure-ftpd.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
@@ -408,7 +408,7 @@ Section: net
 Priority: optional
 Architecture: amd64
 Eseential: no
-Depends: libssl-dev,zlib1g-dev
+Depends: zlib1g-dev
 Maintainer: Jerry Wang[1976883731@qq.com]
 Description: pure-ftpd build by hws
 Homepage: https://www.hws.com
