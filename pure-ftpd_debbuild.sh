@@ -396,9 +396,9 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${buildroot}${pureftpd_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libssl.a ${buildroot}${pureftpd_location}/lib
     # Fix libcrypto
-    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.a ${buildroot}${pureftpd_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ${buildroot}${pureftpd_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.a ${buildroot}${pureftpd_location}/lib
     echo "${pureftpd_location}/lib" > ${buildroot}/etc/ld.so.conf.d/pure-ftpd.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
