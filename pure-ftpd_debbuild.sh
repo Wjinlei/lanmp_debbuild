@@ -384,9 +384,22 @@ _build_deb(){
     buildroot=/tmp/buildroot
     mkdir -p ${buildroot}
     mkdir -p ${buildroot}/DEBIAN
+    # Copy files
     cp -a --parents ${pureftpd_location} ${buildroot}
     cp -a --parents /etc/ssl/private/pure-ftpd.pem ${buildroot}
     cp -a --parents /etc/init.d/pure-ftpd ${buildroot}
+    mkdir -p ${buildroot}/etc/ld.so.conf.d
+    mkdir -p ${buildroot}${pureftpd_location}/lib
+    cd ${buildroot}${pureftpd_location}/lib
+    # Fix libssl
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.so ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libssl.a ${buildroot}${pureftpd_location}/lib
+    # Fix libcrypto
+    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.a ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ${buildroot}${pureftpd_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libcrypto.so ${buildroot}${pureftpd_location}/lib
+    echo "${pureftpd_location}/lib" > ${buildroot}/etc/ld.so.conf.d/pure-ftpd.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
 Package: pure-ftpd
@@ -402,6 +415,8 @@ Homepage: https://www.hws.com
 EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
+ldconfig -v > /dev/null 2>&1
+[ $? -ne 0 ] && echo "[ERROR]: ldconfig"
 id -u www >/dev/null 2>&1
 [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
@@ -418,6 +433,13 @@ exit 0
 EOF
     chmod +x ${buildroot}/DEBIAN/prerm
 
+    cat > ${buildroot}/DEBIAN/postrm << 'EOF'
+ldconfig -v > /dev/null 2>&1
+exit 0
+EOF
+    chmod +x ${buildroot}/DEBIAN/postrm
+
+    cd /tmp
     dpkg-deb -b ${buildroot} pureftpd-1.0.49-linux-amd64.deb
 }
 
