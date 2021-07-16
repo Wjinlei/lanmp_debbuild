@@ -742,7 +742,6 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2.1.0 ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so ${buildroot}${php80_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libzip ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2 ${buildroot}${php80_location}/lib
     # Fix libz
     cp -a /lib/x86_64-linux-gnu/libz.so.1.2.8 ${buildroot}${php80_location}/lib
@@ -754,11 +753,12 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libonig.so ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libonig.so.2 ${buildroot}${php80_location}/lib
     # Fix libpng
-    cp -a /usr/lib/x86_64-linux-gnu/libpng12.so.0 ${buildroot}${php80_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libpng.a ${buildroot}${php80_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libpng.so ${buildroot}${php80_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libpng12.so ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libpng12.a ${buildroot}${php80_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libpng12.so.0.50.0 ${buildroot}${php80_location}/lib
+    ln -s libpng12.so.0.50.0 libpng12.so.0
+    ln -s libpng12.so.0 libpng12.so
+    ln -s libpng12.so libpng.so
+    ln -s libpng12.a libpng.a
     # Fix libjpeg
     cp -a /usr/lib/x86_64-linux-gnu/libjpeg.a ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libjpeg.so ${buildroot}${php80_location}/lib
