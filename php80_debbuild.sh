@@ -734,10 +734,9 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.1.3 ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php80_location}/lib
     # Fix libtinfo
-    #cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php80_location}/lib
-    #cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php80_location}/lib
-    #cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php80_location}/lib
-    #ln -s libtinfo.so.5 libtinfo.so
+    libtinfo5_filename="libtinfo5"
+    DownloadUrl ${libtinfo5_filename}.tar.gz http://test.hws.com/wangjinlei/${libtinfo5_filename}.tar.gz
+    tar -xf ${libtinfo5_filename}.tar.gz -C  ${buildroot}${php80_location}/lib
     # Fix libzip
     cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2.1.0 ${buildroot}${php80_location}/lib
