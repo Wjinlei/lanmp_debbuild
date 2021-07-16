@@ -734,20 +734,20 @@ _build_deb(){
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.1.3 ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php80_location}/lib
     # Fix libtinfo
-    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php80_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php80_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php80_location}/lib
-    ln -s libtinfo.so.5 libtinfo.so
+    #cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php80_location}/lib
+    #cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php80_location}/lib
+    #cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php80_location}/lib
+    #ln -s libtinfo.so.5 libtinfo.so
     # Fix libzip
     cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2.1.0 ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2 ${buildroot}${php80_location}/lib
     # Fix libz
-    cp -a /lib/x86_64-linux-gnu/libz.so.1.2.8 ${buildroot}${php80_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libz.a ${buildroot}${php80_location}/lib
-    ln -s libz.so.1.2.8 libz.so.1
-    ln -s libz.so.1 libz.so
+    #cp -a /lib/x86_64-linux-gnu/libz.so.1.2.8 ${buildroot}${php80_location}/lib
+    #cp -a /usr/lib/x86_64-linux-gnu/libz.a ${buildroot}${php80_location}/lib
+    #ln -s libz.so.1.2.8 libz.so.1
+    #ln -s libz.so.1 libz.so
     # Fix libonig
     cp -a /usr/lib/x86_64-linux-gnu/libonig.so.2.0.1 ${buildroot}${php80_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libonig.so ${buildroot}${php80_location}/lib
