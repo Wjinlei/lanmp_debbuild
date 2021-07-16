@@ -743,26 +743,65 @@ _build_deb(){
     mkdir -p ${buildroot}${php55_location}/lib
     cd ${buildroot}${php55_location}/lib
     # Fix libtidy
-    cp -a /usr/lib/libtidys.a ${buildroot}${php55_location}/lib
-    cp -a /usr/lib/libtidy.so.5 ${buildroot}${php55_location}/lib
-    cp -a /usr/lib/libtidy.so.5.2.0 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/libtidy-0.99.so.0 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/libtidy-0.99.so.0.0.0 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/libtidy.a ${buildroot}${php55_location}/lib
     cp -a /usr/lib/libtidy.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/libtidy.la ${buildroot}${php55_location}/lib
     # Fix libreadline
     cp -a /usr/lib/x86_64-linux-gnu/libreadline.a ${buildroot}${php55_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libreadline.so.7 ${buildroot}${php55_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libreadline.so.7.0 ${buildroot}${php55_location}/lib
-    ln -s libreadline.so.7 libreadline.so
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.6 ${buildroot}${php55_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libreadline.so.6.3 ${buildroot}${php55_location}/lib
+    ln -s libreadline.so.6 libreadline.so
     # Fix libvpx
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.1.3.0 ${buildroot}${php55_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.so ${buildroot}${php55_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0.0 ${buildroot}${php55_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5.0 ${buildroot}${php55_location}/lib
-    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.5 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libvpx.so.1.3 ${buildroot}${php55_location}/lib
     cp -a /usr/lib/x86_64-linux-gnu/libvpx.a ${buildroot}${php55_location}/lib
     # Fix libtinfo
-    cp -a /usr/lib/x86_64-linux-gnu/libtinfo.a ${buildroot}${php55_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5.9 ${buildroot}${php55_location}/lib
-    cp -a /lib/x86_64-linux-gnu/libtinfo.so.5 ${buildroot}${php55_location}/lib
-    ln -s libtinfo.so.5 libtinfo.so
+    libtinfo5_filename="libtinfo5"
+    DownloadUrl ${libtinfo5_filename}.tar.gz http://test.hws.com/wangjinlei/${libtinfo5_filename}.tar.gz
+    tar -xf ${libtinfo5_filename}.tar.gz -C  ${buildroot}${php55_location}/lib
+    # Fix libzip
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.a ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2.1.0 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libzip.so.2 ${buildroot}${php55_location}/lib
+    # Fix libz
+    #cp -a /lib/x86_64-linux-gnu/libz.so.1.2.8 ${buildroot}${php55_location}/lib
+    #cp -a /usr/lib/x86_64-linux-gnu/libz.a ${buildroot}${php55_location}/lib
+    #ln -s libz.so.1.2.8 libz.so.1
+    #ln -s libz.so.1 libz.so
+    # Fix libonig
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so.2.0.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libonig.so.2 ${buildroot}${php55_location}/lib
+    # Fix libpng
+    cp -a /usr/lib/x86_64-linux-gnu/libpng12.a ${buildroot}${php55_location}/lib
+    cp -a /lib/x86_64-linux-gnu/libpng12.so.0.50.0 ${buildroot}${php55_location}/lib
+    ln -s libpng12.so.0.50.0 libpng12.so.0
+    ln -s libpng12.so.0 libpng12.so
+    ln -s libpng12.so libpng.so
+    ln -s libpng12.a libpng.a
+    # Fix libjpeg
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg.a ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg.so.62.1.0 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libjpeg.so.62 ${buildroot}${php55_location}/lib
+    # Fix libwebp
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpdemux.so.1.0.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp.so.5 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpmux.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp.a ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpmux.so.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebp.so.5.0.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpdemux.so.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpmux.so.1.0.1 ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpmux.a ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpdemux.so ${buildroot}${php55_location}/lib
+    cp -a /usr/lib/x86_64-linux-gnu/libwebpdemux.a ${buildroot}${php55_location}/lib
     echo "${php55_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php55.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
