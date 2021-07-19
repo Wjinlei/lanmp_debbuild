@@ -19,13 +19,13 @@ include(){
 _install_pureftpd_depends(){
     _info "Starting to install dependencies packages for Pureftpd..."
     if [ "${PM}" = "yum" ];then
-        local yum_depends=(zlib-devel)
+        local yum_depends=(openssl-devel zlib-devel)
         for depend in ${yum_depends[@]}
         do
             InstallPack "yum -y install ${depend}"
         done
     elif [ "${PM}" = "apt-get" ];then
-        local apt_depends=(zlib1g-dev)
+        local apt_depends=(openssl-devel zlib1g-dev)
         for depend in ${apt_depends[@]}
         do
             InstallPack "apt-get -y install ${depend}"
