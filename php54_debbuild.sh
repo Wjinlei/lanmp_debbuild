@@ -118,7 +118,7 @@ _install_php_depend(){
         ln -sf /usr/include/sqlext.h /usr/local/include/
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${php54_location}
 }
 
@@ -772,7 +772,7 @@ _build_deb(){
     echo "${php54_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php54.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: php54
+Package: hws-php54
 Version: 5.4.45
 Section: php
 Priority: optional

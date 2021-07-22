@@ -118,7 +118,7 @@ _install_php_depend(){
         ln -sf /usr/include/sqlext.h /usr/local/include/
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${php53_location}
 }
 
@@ -774,7 +774,7 @@ _build_deb(){
     echo "${php53_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php53.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: php53
+Package: hws-php53
 Version: 5.3.29
 Section: php
 Priority: optional

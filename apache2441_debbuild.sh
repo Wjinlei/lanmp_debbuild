@@ -39,7 +39,7 @@ _install_apache_depend(){
     _install_curl
 
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${apache_location}
     _success "Install dependencies packages for Apache completed..."
 }
@@ -585,7 +585,7 @@ _build_deb(){
     cp -a --parents /etc/init.d/httpd ${buildroot}
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: httpd
+Package: hws-httpd
 Version: 2.4.41
 Section: web
 Priority: optional
@@ -599,7 +599,7 @@ EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
 id -u www >/dev/null 2>&1
-[ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+[ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
 update-rc.d -f httpd defaults >/dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f httpd defaults"
 /etc/init.d/httpd start

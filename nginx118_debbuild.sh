@@ -32,7 +32,7 @@ _install_nginx_depend(){
         done
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${nginx_location}
     _success "Install dependencies packages for Nginx completed..."
 }
@@ -388,7 +388,7 @@ _build_deb(){
     cp -a --parents /etc/init.d/nginx ${buildroot}
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: nginx
+Package: hws-nginx
 Version: 1.18.0
 Section: web
 Priority: optional
@@ -402,7 +402,7 @@ EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
 id -u www >/dev/null 2>&1
-[ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+[ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
 update-rc.d -f nginx defaults >/dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f nginx defaults"
 /etc/init.d/nginx start

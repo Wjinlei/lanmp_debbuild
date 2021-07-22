@@ -33,7 +33,7 @@ _install_pureftpd_depends(){
     fi
     CheckInstalled "_install_openssl102" ${openssl102_location}
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${pureftpd_location}
     _success "Install dependencies packages for Pureftpd completed..."
 }
@@ -440,7 +440,7 @@ _build_deb(){
     cp -a --parents /etc/init.d/pure-ftpd ${buildroot}
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: pure-ftpd
+Package: hws-pureftpd
 Version: 1.0.49
 Section: net
 Priority: optional
@@ -454,7 +454,7 @@ EOF
 
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
 id -u www >/dev/null 2>&1
-[ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+[ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
 update-rc.d -f pure-ftpd defaults >/dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f pure-ftpd defaults"
 /etc/init.d/pure-ftpd start

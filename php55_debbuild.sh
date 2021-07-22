@@ -118,7 +118,7 @@ _install_php_depend(){
         ln -sf /usr/include/sqlext.h /usr/local/include/
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${php55_location}
 }
 
@@ -806,7 +806,7 @@ _build_deb(){
     echo "${php55_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php55.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: php55
+Package: hws-php55
 Version: 5.5.38
 Section: php
 Priority: optional

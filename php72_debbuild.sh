@@ -118,7 +118,7 @@ _install_php_depend(){
         ln -sf /usr/include/sqlext.h /usr/local/include/
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${php72_location}
 }
 
@@ -784,7 +784,7 @@ _build_deb(){
     echo "${php72_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php72.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: php72
+Package: hws-php72
 Version: 7.2.27
 Section: php
 Priority: optional

@@ -118,7 +118,7 @@ _install_php_depend(){
         ln -sf /usr/include/sqlext.h /usr/local/include/
     fi
     id -u www >/dev/null 2>&1
-    [ $? -ne 0 ] && useradd -M -U www -r -d /dev/null -s /sbin/nologin
+    [ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
     mkdir -p ${php80_location}
 }
 
@@ -779,7 +779,7 @@ _build_deb(){
     echo "${php80_location}/lib" > ${buildroot}/etc/ld.so.conf.d/php80.conf
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: php80
+Package: hws-php80
 Version: 8.0.0
 Section: php
 Priority: optional

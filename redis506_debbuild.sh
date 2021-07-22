@@ -234,7 +234,7 @@ _build_deb(){
     cp -a --parents /etc/init.d/redis ${buildroot}
 
     cat > ${buildroot}/DEBIAN/control << EOF
-Package: redis
+Package: hws-redis
 Version: 5.0.6
 Section: database
 Priority: optional
