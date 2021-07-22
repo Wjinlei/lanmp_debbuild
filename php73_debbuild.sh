@@ -42,7 +42,7 @@ _install_php_depend(){
             libpcre3-dev libtool libjpeg-dev libpng-dev libpspell-dev
             libmhash-dev libenchant-dev libwebp-dev libxpm-dev libvpx-dev
             libreadline-dev libzip-dev libmcrypt-dev unixodbc-dev
-            libtidy-dev python-dev
+            libtidy-dev python-dev libonig-dev
         )
         for depend in ${apt_depends[@]}
         do
@@ -794,7 +794,7 @@ libpam0g-dev,autoconf2.13,pkg-config,libxslt1-dev,zlib1g-dev, \
 libpcre3-dev,libtool,libjpeg-dev,libpng-dev,libpspell-dev, \
 libmhash-dev,libenchant-dev,libwebp-dev,libxpm-dev,libvpx-dev, \
 libreadline-dev,libzip-dev,libmcrypt-dev,unixodbc-dev, \
-libtidy-dev,python-dev
+libtidy-dev,python-dev,libonig-dev
 Maintainer: Jerry Wang[1976883731@qq.com]
 Description: php7.3.14 build by hws
 Homepage: https://www.hws.com
