@@ -553,8 +553,8 @@ debbuild_apache2446(){
     CheckError "parallel_make"
     CheckError "make install"
     unset LDFLAGS
-    chown -R www:www ${apache_location}
-    #Config
+    #chown -R www:www ${apache_location}
+    # Config
     _info "Config ${apache2446_filename}"
     _create_logrotate_file
     _create_config_file

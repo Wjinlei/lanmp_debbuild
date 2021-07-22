@@ -353,7 +353,7 @@ debbuild_nginx116(){
     mkdir -p ${nginx_location}/var/{log,run,lock,tmp}
     mkdir -p ${nginx_location}/var/tmp/{client,proxy,fastcgi,uwsgi}
     mkdir -p ${nginx_location}/etc/vhost
-    chown -R www:www ${nginx_location}
+    #chown -R www:www ${nginx_location}
     # Config
     _info "Config ${nginx116_filename}"
     _create_logrotate_file
