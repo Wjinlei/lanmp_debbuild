@@ -800,6 +800,8 @@ EOF
     cat > ${buildroot}/DEBIAN/postinst << 'EOF'
 ldconfig -v > /dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: ldconfig"
+id -u www >/dev/null 2>&1
+[ $? -ne 0 ] && useradd -M -U www -d /home/www -s /sbin/nologin
 update-rc.d -f php74 defaults >/dev/null 2>&1
 [ $? -ne 0 ] && echo "[ERROR]: update-rc.d -f php74 defaults"
 /etc/init.d/php74 start
